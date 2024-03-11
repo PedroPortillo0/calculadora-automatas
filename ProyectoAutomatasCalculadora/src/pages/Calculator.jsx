@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import "../assets/style/Calculator.css";
 
 function Calculator() {
@@ -9,11 +10,15 @@ function Calculator() {
     }
 
     const calculate = () => {
-        try {
-            setInput(eval(input).toString());
-        } catch {
+        axios.post('http://127.0.0.1:5000/', {
+            expression: input
+        })
+        .then(response => {
+            setInput(response.data.result.toString());
+        })
+        .catch(error => {
             setInput("Error");
-        }
+        });
     }
 
     const clear = () => {
@@ -22,10 +27,10 @@ function Calculator() {
 
     return ( 
         <>
-            <div class="container">
+            <div className="container">
                 <div id="cal-body">
                     <div className="input">
-                        <input type="text" value={input} />
+                        <input type="text" value={input} onChange={e => setInput(e.target.value)} />
                     </div>
                     <div style={{paddingTop: '3rem'}}>
                         <div className="buttons">
