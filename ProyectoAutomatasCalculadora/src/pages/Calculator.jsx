@@ -4,6 +4,7 @@ import "../assets/style/Calculator.css";
 
 function Calculator() {
     const [input, setInput] = useState("");
+    const [lexResult, setLexResult] = useState([]);
 
     const handleClick = (e) => {
         setInput(input + e.target.name);
@@ -15,14 +16,17 @@ function Calculator() {
         })
         .then(response => {
             setInput(response.data.result.toString());
+            setLexResult(response.data.lex_result);
         })
         .catch(error => {
             setInput("Error");
+            setLexResult([]);
         });
     }
 
     const clear = () => {
         setInput("");
+        setLexResult([]);
     }
 
     return ( 
@@ -31,6 +35,9 @@ function Calculator() {
                 <div id="cal-body">
                     <div className="input">
                         <input type="text" value={input} onChange={e => setInput(e.target.value)} />
+                    </div>
+                    <div>
+                        <p>Lexical Analysis: {lexResult.join(' ')}</p>
                     </div>
                     <div style={{paddingTop: '3rem'}}>
                         <div className="buttons">
