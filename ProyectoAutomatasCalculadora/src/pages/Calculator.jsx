@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { Parser, Grammar } from 'nearley';
+import { ParserRules, ParserStart } from '../gramatica/grammar.js';
 import "../assets/style/Calculator.css";
+
+const compiledGrammar = { ParserRules, ParserStart };
 
 function Calculator() {
     const [input, setInput] = useState("");
@@ -11,22 +14,19 @@ function Calculator() {
     }
 
     const calculate = () => {
-        axios.post('http://127.0.0.1:5000/', {
-            expression: input
-        })
-        .then(response => {
-            setInput(response.data.result.toString());
-            setLexResult(response.data.lex_result);
-        })
-        .catch(error => {
+        try {
+            const parser = new Parser(Grammar.fromCompiled(compiledGrammar));
+            const result = parser.feed(input).results[0];
+            setInput(result.toString());
+            setLexResult(parser.results); // Almacenar el resultado del análisis léxico
+        } catch (error) {
             setInput("Error");
-            setLexResult([]);
-        });
+        }
     }
 
     const clear = () => {
         setInput("");
-        setLexResult([]);
+        setLexResult([]); // Limpiar el resultado del análisis léxico
     }
 
     return ( 
