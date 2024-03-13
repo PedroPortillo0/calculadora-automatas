@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { ParserRules, ParserStart } from '../gramatica/grammar.js';
 import "../assets/style/Calculator.css";
-
-const compiledGrammar = { ParserRules, ParserStart };
 
 function Calculator() {
     const [input, setInput] = useState("");
     const [lexResult, setLexResult] = useState([]);
     const [operations, setOperations] = useState([]);
+    const [operationTree, setOperationTree] = useState("");
 
     const handleClick = (e) => {
         setInput(input + e.target.name);
@@ -19,6 +17,7 @@ function Calculator() {
             const result = eval(input).toString();
             setInput(result);
             setOperations([...operations, `${input} = ${result}`]);
+            setOperationTree(createOperationTree(input));
         } catch (error) {
             setInput("Error");
         }
@@ -27,6 +26,19 @@ function Calculator() {
     const clear = () => {
         setInput("");
         setLexResult([]);
+        setOperationTree("");
+    }
+
+    const createOperationTree = (input) => {
+        const elements = input.split(/(\+|\-|\/|\*)/);
+        let tree = '';
+        elements.forEach((element, index) => {
+            const symbol = index % 2 === 0 ? '/' : '\\';
+            if (element !== "") {
+                tree += symbol + ' '.repeat(index) + element + '\n';
+            }
+        });
+        return tree;
     }
 
     return ( 
@@ -75,6 +87,7 @@ function Calculator() {
                     {operations.map((operation, index) => (
                         <p className="estiloImpresion" key={index}>{index + 1}.- {operation}</p>
                     ))}
+                    <pre>{operationTree}</pre>
                 </div>
             </div>
         </>
@@ -82,3 +95,9 @@ function Calculator() {
 }
 
 export default Calculator;
+
+
+
+
+//import { ParserRules, ParserStart } from '../gramatica/grammar.js';
+//const compiledGrammar = { ParserRules, ParserStart };
