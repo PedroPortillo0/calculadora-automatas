@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Parser, Grammar } from 'nearley';
 import { ParserRules, ParserStart } from '../gramatica/grammar.js';
 import "../assets/style/Calculator.css";
 
@@ -8,17 +7,18 @@ const compiledGrammar = { ParserRules, ParserStart };
 function Calculator() {
     const [input, setInput] = useState("");
     const [lexResult, setLexResult] = useState([]);
+    const [operations, setOperations] = useState([]);
 
     const handleClick = (e) => {
         setInput(input + e.target.name);
+        setLexResult([...lexResult, e.target.name]);
     }
 
     const calculate = () => {
         try {
-            const parser = new Parser(Grammar.fromCompiled(compiledGrammar));
-            const result = parser.feed(input).results[0];
-            setInput(result.toString());
-            setLexResult(parser.results); // Almacenar el resultado del análisis léxico
+            const result = eval(input).toString();
+            setInput(result);
+            setOperations([...operations, `${input} = ${result}`]);
         } catch (error) {
             setInput("Error");
         }
@@ -26,7 +26,7 @@ function Calculator() {
 
     const clear = () => {
         setInput("");
-        setLexResult([]); // Limpiar el resultado del análisis léxico
+        setLexResult([]);
     }
 
     return ( 
@@ -69,6 +69,12 @@ function Calculator() {
                             <button style={{ width: "18rem"}} onClick={calculate}>=</button>
                         </div>
                     </div>
+                </div>
+                <div id="operations">
+                    <h1 className='tituloOperaciones'>Operations</h1>
+                    {operations.map((operation, index) => (
+                        <p className="estiloImpresion" key={index}>{index + 1}.- {operation}</p>
+                    ))}
                 </div>
             </div>
         </>
