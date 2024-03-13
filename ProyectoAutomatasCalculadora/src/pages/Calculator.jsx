@@ -43,6 +43,31 @@ function Calculator() {
         });
         return tree;
     }
+
+    function getTokenType(token) {
+        if (!isNaN(token)) {
+            return 'numérico';
+        }
+        switch (token) {
+            case '+':
+                return 'operador suma';
+            case '-':
+                return 'operador resta';
+            case '/':
+                return 'operador división';
+            case '*':
+                return 'operador multiplicación';
+            case '(':
+                return 'paréntesis izquierdo';
+            case ')':   
+                return 'paréntesis derecho';
+            case '.':   
+                return 'punto decimal';
+            default:
+                return 'desconocido';
+        }
+    }
+
     return ( 
         <>
             <div className="container">
@@ -97,9 +122,12 @@ function Calculator() {
                 </div>
                 <div style={{ marginLeft: '5rem' }}>
                     <h3 className='tituloOperaciones'>Impresión de Token</h3>
-                    {operationElements.map((element, index) => (
-                        <p className="estiloImpresion" key={index}>Line {index + 1}: Generado por el Token "{element}"</p>
-                    ))}
+                    {operationElements.map((element, index) => {
+                        const tokenType = getTokenType(element);
+                        return (
+                            <p className="estiloImpresion" key={index}>Line {index + 1}: Generado por el Token "{element}" de tipo {tokenType}</p>
+                        );
+                    })}
                 </div>
             </div>
         </>
