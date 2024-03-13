@@ -6,10 +6,12 @@ function Calculator() {
     const [lexResult, setLexResult] = useState([]);
     const [operations, setOperations] = useState([]);
     const [operationTree, setOperationTree] = useState("");
+    const [operationElements, setOperationElements] = useState([]); // Nuevo estado
 
     const handleClick = (e) => {
         setInput(input + e.target.name);
         setLexResult([...lexResult, e.target.name]);
+        setOperationElements([...operationElements, e.target.name]); // Agregar el elemento a operationElements
     }
 
     const calculate = () => {
@@ -27,6 +29,7 @@ function Calculator() {
         setInput("");
         setLexResult([]);
         setOperationTree("");
+        setOperationElements([]); // Limpiar operationElements
     }
 
     const createOperationTree = (input) => {
@@ -40,7 +43,6 @@ function Calculator() {
         });
         return tree;
     }
-
     return ( 
         <>
             <div className="container">
@@ -78,16 +80,26 @@ function Calculator() {
                         </div>
                         <div className="buttons">
                             <button onClick={clear}>CL</button>
+                            <button name="/" onClick={handleClick}>/</button> 
                             <button style={{ width: "18rem"}} onClick={calculate}>=</button>
                         </div>
                     </div>
                 </div>
                 <div id="operations">
-                    <h1 className='tituloOperaciones'>Operations</h1>
+                    <h1 className='tituloOperaciones'>Operaciones</h1>
                     {operations.map((operation, index) => (
                         <p className="estiloImpresion" key={index}>{index + 1}.- {operation}</p>
                     ))}
-                    <pre>{operationTree}</pre>
+                    <div style={{ boxShadow: '5px 5px 15px rgba(0,0,0,0.3)', borderRadius: '10px', border: '3px solid black', marginTop: "1rem"}}>
+                        <h4 className='tituloOperaciones'> Arbol</h4>
+                        <pre className="estiloImpresion">{operationTree}</pre>
+                    </div>
+                </div>
+                <div style={{ marginLeft: '5rem' }}>
+                    <h3 className='tituloOperaciones'>Impresión de Token</h3>
+                    {operationElements.map((element, index) => (
+                        <p className="estiloImpresion" key={index}>Line {index + 1}: Generado por el Token "{element}"</p>
+                    ))}
                 </div>
             </div>
         </>

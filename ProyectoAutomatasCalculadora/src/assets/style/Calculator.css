@@ -61,12 +61,12 @@
     justify-content: justify;
     align-items: justify;
     cursor: pointer;
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     color: rgb(137, 137, 137);
   }
 
   .tituloOperaciones{
     font-size: 3rem;
     color: rgb(117, 117, 117);
-
+    text-align: center;
   }
